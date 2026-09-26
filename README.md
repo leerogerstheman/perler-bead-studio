@@ -5,7 +5,7 @@
 
 界面为**包豪斯（Bauhaus）风格**：三原色 + 黑白、直角直线、方形色块按钮、粗细对比排版。
 
-![界面预览](_预览/界面截图.png)
+![界面预览](docs/界面截图.png)
 
 > ### ⚠️ 本软件开源免费
 > 本软件在 GitHub 上开源（[本仓库](https://github.com/leerogerstheman/perler-bead-studio)），**不收取任何费用**。
@@ -26,7 +26,7 @@
 | **实时预览** | 鼠标悬停查看每格坐标与色号；适应窗口 / 1× ~ 5× 缩放；百万格图案仍是秒级响应 |
 | **免安装** | 自带 Python 运行时的完整包可直接拷走；仓库版只需 Python 3.10+ 与 Pillow |
 
-<img src="_预览/导出图纸示例.png" width="420"> <img src="_预览/图标_小尺寸预览.png" width="300">
+<img src="docs/导出图纸示例.png" width="420"> <img src="docs/图标_小尺寸预览.png" width="300">
 
 ## 快速开始
 
@@ -129,7 +129,7 @@ powershell -ExecutionPolicy Bypass -File deploy_runtime.ps1 -Source "C:\Python31
 
 ## 程序图标
 
-<img src="_预览/图标设计.png" width="150" align="right">
+<img src="docs/图标设计.png" width="150" align="right">
 
 图标是**拼豆 + 包豪斯**的结合：
 
