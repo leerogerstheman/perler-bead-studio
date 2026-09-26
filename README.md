@@ -7,6 +7,18 @@
 
 ![界面预览](docs/界面截图.png)
 
+## 下载即用（推荐给普通用户）
+
+不想折腾 Python 环境的话，直接下压缩包，解压双击即可：
+
+| 下载 | 大小 | 说明 |
+| --- | --- | --- |
+| [**perler-bead-studio-full.zip**](https://github.com/leerogerstheman/perler-bead-studio/releases/latest/download/perler-bead-studio-full.zip) | 49 MB | **推荐**。自带 Python 运行环境，解压后双击 `启动.bat` 就能用，不需要安装任何东西；拷到 U 盘或别的 Windows 电脑也能跑。 |
+| [perler-bead-studio-lite.zip](https://github.com/leerogerstheman/perler-bead-studio/releases/latest/download/perler-bead-studio-lite.zip) | 0.6 MB | 电脑上已装好 Python 3.10+ 与 Pillow 的人，只有源码。 |
+
+用法：下载 → **解压**到任意文件夹 → 双击里面的 **`启动.bat`**。
+（更多版本见 [Releases](https://github.com/leerogerstheman/perler-bead-studio/releases)）
+
 > ### ⚠️ 本软件开源免费
 > 本软件在 GitHub 上开源（[本仓库](https://github.com/leerogerstheman/perler-bead-studio)），**不收取任何费用**。
 > 若您付费以获取此工具，请立即退款。
