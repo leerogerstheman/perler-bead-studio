@@ -1,0 +1,39 @@
+# ---------- 自带 Python 运行时（162MB，不进仓库）----------
+# 仓库里只放源码；运行时用 deploy_runtime.ps1 在本地生成，
+# 或者自行安装 Python 3.10+ 与 Pillow。
+python/
+
+# ---------- 本机设置与用户数据 ----------
+settings.json
+settings.json.bak
+
+# ---------- 导出结果与自检产物 ----------
+导出/
+自检输出/
+_预览/
+*.log
+
+# ---------- Python 产物 ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+build/
+dist/
+*.spec
+
+# ---------- 打包产物 ----------
+*.exe
+
+# ---------- 编辑器 / 系统 ----------
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# 本地辅助文件
+_commit_msg.txt
