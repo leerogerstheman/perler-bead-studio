@@ -9,15 +9,21 @@
 
 ## 下载即用（推荐给普通用户）
 
-不想折腾 Python 环境的话，直接下压缩包，解压双击即可：
+**最省事：直接下单个 exe，双击就能用，不用解压、不用装 Python。**
 
 | 下载 | 大小 | 说明 |
 | --- | --- | --- |
-| [**perler-bead-studio-full.zip**](https://github.com/leerogerstheman/perler-bead-studio/releases/latest/download/perler-bead-studio-full.zip) | 49 MB | **推荐**。自带 Python 运行环境，解压后双击 `启动.bat` 就能用，不需要安装任何东西；拷到 U 盘或别的 Windows 电脑也能跑。 |
+| [**PerlerBeadStudio.exe**](https://github.com/leerogerstheman/perler-bead-studio/releases/latest/download/PerlerBeadStudio.exe) | **30 MB** | **推荐**。单文件程序，双击直接运行，不需要安装任何东西。首次启动会解压到临时目录，大约等 3~8 秒。（也在本仓库根目录里） |
+| [**perler-bead-studio-full.zip**](https://github.com/leerogerstheman/perler-bead-studio/releases/latest/download/perler-bead-studio-full.zip) | 49 MB | 自带 Python 运行环境的**文件夹版**，解压后双击 `启动.bat`。启动比 exe 快，适合经常用、想放 U 盘的人。 |
 | [perler-bead-studio-lite.zip](https://github.com/leerogerstheman/perler-bead-studio/releases/latest/download/perler-bead-studio-lite.zip) | 0.6 MB | 电脑上已装好 Python 3.10+ 与 Pillow 的人，只有源码。 |
 
-用法：下载 → **解压**到任意文件夹 → 双击里面的 **`启动.bat`**。
-（更多版本见 [Releases](https://github.com/leerogerstheman/perler-bead-studio/releases)）
+想直接用 exe 打开某张图片：把图片**拖到 exe 图标上**，或在命令行里
+`PerlerBeadStudio.exe D:\图片.png`。
+
+> exe 与文件夹版功能完全一样。区别只在启动方式：
+> exe 是单文件、启动时解压（每次约 3~8 秒）；文件夹版启动快、但文件多。
+>
+> 更多版本见 [Releases](https://github.com/leerogerstheman/perler-bead-studio/releases)。
 
 > ### ⚠️ 本软件开源免费
 > 本软件在 GitHub 上开源（[本仓库](https://github.com/leerogerstheman/perler-bead-studio)），**不收取任何费用**。
