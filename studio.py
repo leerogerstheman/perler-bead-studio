@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import queue
+import sys
 import threading
 import time
 import tkinter as tk
@@ -28,7 +29,7 @@ from core import (BeadPattern, ConvertOptions, convert_file, estimate_sheets,
 APP_TITLE = "拼豆图案生成器"
 APP_SUBTITLE = "PERLER BEAD STUDIO"
 APP_VERSION = "1.1"
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = settings.app_dir()      # 打包成 exe 后＝exe 所在目录，而不是解压临时目录
 EXPORT_DIR = os.path.join(BASE_DIR, "导出")
 
 # 常用色引用（统一走 bauhaus 主题）
@@ -87,8 +88,9 @@ WRAP = SIDEBAR_W - SIDE_PAD * 2 - 22
 
 
 class StudioApp:
-    def __init__(self, root: tk.Tk) -> None:
+    def __init__(self, root: tk.Tk, image_path: str = "") -> None:
         self.root = root
+        self._pending_image = image_path if image_path and os.path.exists(image_path) else ""
         self.image_path: str = ""
         self.pattern: BeadPattern | None = None
         self.chart_image = None
@@ -146,6 +148,10 @@ class StudioApp:
         self.root.after(400, self._tick_refresh)
         self.root.after(200, self._draw_welcome)
         self.root.after(1200, self._apply_ttk_theming)
+        # 支持命令行直接带图片打开：xxx.exe D:\图片.png
+        pending = getattr(self, "_pending_image", "")
+        if pending:
+            self.root.after(300, lambda p=pending: self.load_image(p))
 
     @staticmethod
     def _preset_label(cols: int, rows: int) -> str:
@@ -616,11 +622,21 @@ class StudioApp:
             self.load_image(path)
 
     def load_sample(self) -> None:
+        """载入示例图片。找不到就地生成一张（打包成单个 exe 时也是这个路径）。"""
         path = os.path.join(BASE_DIR, "示例图片.png")
         if not os.path.exists(path):
-            messagebox.showinfo("没有示例图片",
-                                "示例图片不存在。\n可以运行 python make_sample.py 生成，"
-                                "或直接选择你自己的图片。")
+            try:
+                import make_sample
+                self.var_status.set("正在生成示例图片…")
+                self.root.update_idletasks()
+                make_sample.main()
+            except Exception as exc:      # noqa: BLE001
+                messagebox.showinfo("没有示例图片",
+                                    f"示例图片不存在，且自动生成失败：{exc}\n"
+                                    "请直接选择你自己的图片。")
+                return
+        if not os.path.exists(path):
+            messagebox.showinfo("没有示例图片", "示例图片生成失败，请直接选择你自己的图片。")
             return
         self.load_image(path)
 
@@ -1144,6 +1160,13 @@ class StudioApp:
 
 
 def main() -> None:
+    # 支持命令行带图片：xxx.exe D:\图片.png
+    image_arg = ""
+    for arg in sys.argv[1:]:
+        if not arg.startswith("-") and os.path.exists(arg):
+            image_arg = arg
+            break
+
     root = tk.Tk()
     bh.set_window_icon(root)
     root.withdraw()
@@ -1153,7 +1176,7 @@ def main() -> None:
             root.destroy()
             return
     root.deiconify()
-    StudioApp(root)
+    StudioApp(root, image_arg)
     root.mainloop()
 
 

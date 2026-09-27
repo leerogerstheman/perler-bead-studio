@@ -11,10 +11,19 @@
 from __future__ import annotations
 
 import os
+import sys
 
 from PIL import Image, ImageDraw, ImageFilter
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def _default_dir() -> str:
+    """输出目录：打包成单文件 exe 后 __file__ 指向临时解压目录，要用 exe 所在目录。"""
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(os.path.abspath(sys.executable))
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+BASE_DIR = _default_dir()
 W, H = 640, 640
 
 

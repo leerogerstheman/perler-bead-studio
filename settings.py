@@ -9,9 +9,22 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import tempfile
 
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def app_dir() -> str:
+    """程序所在目录。
+
+    打包成单文件 exe 后，__file__ 指向解压出来的临时目录，程序一退出就没了，
+    所以这时要用 exe 自身所在的目录（sys.executable），设置与导出才能留住。
+    """
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(os.path.abspath(sys.executable))
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+APP_DIR = app_dir()
 LOCAL_FILE = os.path.join(APP_DIR, "settings.json")
 ROAMING_FILE = os.path.join(
     os.environ.get("APPDATA") or os.path.expanduser("~"),
