@@ -76,6 +76,31 @@ powershell -ExecutionPolicy Bypass -File deploy_runtime.ps1 -Source "C:\Python31
 构建EXE.bat          :: 需要先 pip install pyinstaller，图标会自动带上
 ```
 
+### 方式四：网页版（不需要 tkinter）
+
+```bat
+启动网页版.bat
+```
+
+或者：
+
+```bat
+python webui.py                 :: 默认端口 8756，自动打开浏览器
+python webui.py --port 9000 --no-browser
+```
+
+界面在浏览器里，后端仍然是同一套 `core.py` / `painter.py` —— 转换、渲染、导出的
+结果与桌面版**逐字节相同**，导出也进同一个 `导出\` 目录。
+
+两点不同：
+
+- **不需要 tkinter**。界面由标准库 `http.server` 提供，所以只要有 Pillow 就能跑。
+  `启动.bat` 会检查 `import tkinter,PIL`，这个只检查 `import PIL`。
+- **不引入任何第三方库**。`pywebview` 之类的方案会带进它自己的一串依赖；这里一行
+  依赖都没加，自带运行时里也照常工作。
+
+只监听 `127.0.0.1`，不对外网开放。上传的原图放在 `uploads\`（已加入 `.gitignore`）。
+
 ### 使用流程
 
 1. 点左侧「**浏览…**」选一张图片，或点「**示例图片**」先试玩。

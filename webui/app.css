@@ -1,0 +1,249 @@
+/* 拼豆图纸生成器 · 网页版
+ *
+ * 配色直接取自桌面版的 bauhaus.py，两边看起来必须是同一个产品：
+ *   RED #D62828   BLUE #1B5FC1   YELLOW #F2B705
+ *   BLACK #14161A INK #23262D    PAPER #F4F2ED
+ *   CANVAS #FBFBF9
+ * 包豪斯的做法：黑线、原色、几何块、留白，不加阴影和圆角。
+ */
+
+:root {
+  --red:    #D62828;
+  --blue:   #1B5FC1;
+  --yellow: #F2B705;
+  --black:  #14161A;
+  --ink:    #23262D;
+  --paper:  #F4F2ED;
+  --white:  #FFFFFF;
+  --canvas: #FBFBF9;
+  --muted:  #6B6F76;
+  --line:   #14161A;
+
+  --sans: "Microsoft YaHei UI", "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: Consolas, "Cascadia Mono", ui-monospace, monospace;
+
+  --sidebar-w: 330px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -.01em; }
+
+/* ------------------------------------------------------------- 顶栏 ---- */
+
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  height: 58px; padding: 0 20px;
+  background: var(--white);
+  border-bottom: 3px solid var(--line);
+  position: sticky; top: 0; z-index: 20;
+}
+
+/* 三个原色方块，包豪斯的招牌几何 */
+.mark { display: flex; gap: 3px; }
+.mark span { width: 13px; height: 13px; display: block; }
+.mark span:nth-child(1) { background: var(--red); }
+.mark span:nth-child(2) { background: var(--blue); }
+.mark span:nth-child(3) { background: var(--yellow); }
+
+.topbar h1 { font-size: 16px; }
+.topbar-sub { margin: 0; color: var(--muted); font-size: 12px; }
+.topbar-spacer { flex: 1; }
+
+.file-chip {
+  font-size: 12.5px; color: var(--ink);
+  border: 2px solid var(--line); padding: 3px 10px;
+  background: var(--paper);
+  max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.file-chip.on { background: var(--yellow); }
+
+/* ------------------------------------------------------------ 骨架 ---- */
+
+.shell { display: flex; align-items: flex-start; min-height: calc(100vh - 58px); }
+
+.sidebar {
+  width: var(--sidebar-w); flex: 0 0 var(--sidebar-w);
+  background: var(--paper);
+  border-right: 3px solid var(--line);
+  padding: 16px 16px 60px;
+  position: sticky; top: 58px;
+  max-height: calc(100vh - 58px);
+  overflow-y: auto;
+}
+
+.main { flex: 1; min-width: 0; padding: 20px 24px 60px; }
+
+/* --------------------------------------------------------- 控制区块 ---- */
+
+.block { margin-bottom: 22px; }
+
+.block-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; text-transform: none;
+  padding-bottom: 6px; margin-bottom: 10px;
+  border-bottom: 2px solid var(--line);
+}
+.block-title b {
+  width: 20px; height: 20px; flex: 0 0 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--black); color: var(--white);
+  font-size: 12px; font-weight: 700;
+}
+.block:nth-child(1) .block-title b { background: var(--red); }
+.block:nth-child(2) .block-title b { background: var(--blue); }
+.block:nth-child(3) .block-title b { background: var(--yellow); color: var(--black); }
+.block:nth-child(4) .block-title b { background: var(--black); }
+.block:nth-child(5) .block-title b { background: var(--red); }
+
+.field { display: block; margin: 0 0 10px; }
+.field > span {
+  display: block; font-size: 12px; color: var(--muted);
+  margin-bottom: 4px; font-weight: 600;
+}
+.field em { font-style: normal; color: var(--ink); font-family: var(--mono); }
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.row-2 > .field { flex: 1; min-width: 0; }
+
+.check {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 12.5px; margin: 8px 0; cursor: pointer;
+}
+.check input { margin: 3px 0 0; flex: 0 0 auto; accent-color: var(--red); width: 15px; height: 15px; }
+
+.hint { font-size: 11.5px; color: var(--muted); margin: 8px 0 0; }
+
+/* 表单控件：黑边、方角、无阴影 */
+input[type="text"], input[type="number"], select {
+  width: 100%; padding: 7px 9px;
+  font: inherit; font-size: 13px;
+  color: var(--ink); background: var(--white);
+  border: 2px solid var(--line); border-radius: 0;
+}
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+  outline: 2px solid var(--blue); outline-offset: 0;
+}
+input[type="range"] { width: 100%; accent-color: var(--blue); }
+
+.btn {
+  font: inherit; font-size: 13px; font-weight: 600;
+  padding: 7px 14px; cursor: pointer;
+  background: var(--white); color: var(--ink);
+  border: 2px solid var(--line); border-radius: 0;
+  transition: background .1s, color .1s;
+}
+.btn:hover:not(:disabled) { background: var(--paper); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary { background: var(--red); color: var(--white); border-color: var(--line); }
+.btn-primary:hover:not(:disabled) { background: #B91F1F; }
+
+/* ----------------------------------------------------------- 预览 ---- */
+
+.stage {
+  position: relative;
+  background: var(--canvas);
+  border: 3px solid var(--line);
+  min-height: 420px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; overflow: auto;
+}
+#preview { max-width: 100%; height: auto; display: block; image-rendering: pixelated; }
+
+.welcome { text-align: center; color: var(--muted); padding: 40px 20px; }
+.welcome h2 { font-size: 18px; color: var(--ink); margin-bottom: 6px; }
+.welcome p { margin: 0; font-size: 13px; }
+.welcome-mark { display: flex; justify-content: center; gap: 6px; margin-bottom: 18px; }
+.welcome-mark span { width: 26px; height: 26px; display: block; }
+.wm-red { background: var(--red); }
+.wm-blue { background: var(--blue); }
+.wm-yellow { background: var(--yellow); }
+
+.busy {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(251, 251, 249, .82);
+  font-weight: 600; font-size: 13px;
+}
+.spinner {
+  width: 16px; height: 16px; display: block;
+  border: 3px solid var(--line); border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ----------------------------------------------------------- 统计 ---- */
+
+.stats {
+  display: grid; gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  border: 3px solid var(--line); border-top: none;
+  background: var(--white);
+}
+.stat { padding: 10px 14px; border-right: 2px solid var(--line); }
+.stat:last-child { border-right: none; }
+.stat b { display: block; font-size: 20px; font-family: var(--mono); letter-spacing: -.02em; }
+.stat span { font-size: 11.5px; color: var(--muted); }
+
+/* ----------------------------------------------------------- 清单 ---- */
+
+.counts-wrap { margin-top: 20px; }
+.counts-title { font-size: 14px; margin-bottom: 10px; display: flex; gap: 8px; align-items: baseline; }
+.muted { color: var(--muted); font-weight: 400; font-size: 12px; }
+
+.counts {
+  display: grid; gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+.count {
+  display: flex; align-items: center; gap: 8px;
+  border: 2px solid var(--line); background: var(--white);
+  padding: 5px 9px; font-size: 12.5px;
+}
+.count i {
+  width: 18px; height: 18px; flex: 0 0 18px; display: block;
+  border: 1px solid rgba(0,0,0,.35);
+}
+.count .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.count .n { font-family: var(--mono); font-weight: 700; }
+
+.note {
+  margin-top: 16px; padding: 10px 14px; font-size: 12.5px;
+  border-left: 5px solid var(--blue); background: #EEF3FC;
+}
+
+/* ---------------------------------------------------------- 提示条 ---- */
+
+.toast-host {
+  position: fixed; right: 16px; bottom: 16px; z-index: 100;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  border: 2px solid var(--line); background: var(--white);
+  padding: 9px 14px; font-size: 13px; max-width: 380px;
+  border-left-width: 6px;
+}
+.toast.ok { border-left-color: var(--blue); }
+.toast.err { border-left-color: var(--red); }
+
+/* ---------------------------------------------------------- 窄屏 ---- */
+
+@media (max-width: 1000px) {
+  .shell { display: block; }
+  .sidebar {
+    width: auto; flex: none; position: static; max-height: none;
+    border-right: none; border-bottom: 3px solid var(--line);
+  }
+  .main { padding: 16px; }
+}

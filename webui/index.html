@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>拼豆图纸生成器</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="mark" aria-hidden="true"><span></span><span></span><span></span></div>
+  <h1>拼豆图纸生成器</h1>
+  <p class="topbar-sub">Perler Bead Studio · 网页版</p>
+  <div class="topbar-spacer"></div>
+  <div class="file-chip" id="fileChip">未选择图片</div>
+</header>
+
+<div class="shell">
+
+  <aside class="sidebar">
+
+    <section class="block">
+      <h2 class="block-title"><b>1</b>图片</h2>
+      <div class="row">
+        <button class="btn btn-primary" id="pickBtn">选择图片…</button>
+        <button class="btn" id="sampleBtn">用示例图</button>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+      <p class="hint" id="imageInfo">支持 PNG / JPG / GIF / BMP / WebP / TIFF。</p>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title"><b>2</b>尺寸</h2>
+      <label class="field">
+        <span>预设</span>
+        <select id="presetSel"></select>
+      </label>
+      <div class="row row-2">
+        <label class="field">
+          <span>列</span>
+          <input type="number" id="colsInput" min="4" max="1024" step="1" value="32">
+        </label>
+        <label class="field">
+          <span>行</span>
+          <input type="number" id="rowsInput" min="4" max="1024" step="1" value="32">
+        </label>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="linkChk" checked>
+        <span>锁定宽高比（改一边另一边跟着变）</span>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="bgChk">
+        <span>去掉背景（从四边泛洪填充）</span>
+      </label>
+      <label class="field" id="tolField" hidden>
+        <span>背景容差 <em id="tolVal">24</em></span>
+        <input type="range" id="tolRange" min="0" max="255" step="1" value="24">
+      </label>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title"><b>3</b>风格</h2>
+      <label class="field">
+        <span>色卡</span>
+        <select id="paletteSel"></select>
+      </label>
+      <label class="field">
+        <span>填充方式</span>
+        <select id="fitSel"></select>
+      </label>
+      <label class="field" id="anchorField" hidden>
+        <span>裁切时保留</span>
+        <select id="anchorSel"></select>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="ditherChk">
+        <span>抖动（色阶过渡更自然，颜色种类更多）</span>
+      </label>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title"><b>4</b>视图</h2>
+      <label class="field">
+        <span>画法</span>
+        <select id="modeSel">
+          <option value="bead">圆豆子（看清每颗的位置）</option>
+          <option value="flat">纯色方块（接近成品远看）</option>
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="rulerChk" checked>
+        <span>显示坐标刻度</span>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="gridChk" checked>
+        <span>显示网格线</span>
+      </label>
+      <p class="hint">预览按图纸大小自动选格子边长，导出的文件用完整分辨率。</p>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title"><b>5</b>导出</h2>
+      <label class="field">
+        <span>文件名</span>
+        <input type="text" id="baseInput" placeholder="留空则用图片名">
+      </label>
+      <div class="row">
+        <button class="btn btn-primary" id="exportBtn">导出全部</button>
+        <button class="btn" id="revealBtn" disabled>打开目录</button>
+      </div>
+      <p class="hint" id="exportInfo">图纸 PNG、效果图、SVG、清单 TXT/CSV、网页图纸 HTML。</p>
+    </section>
+
+  </aside>
+
+  <main class="main">
+    <div class="stage" id="stage">
+      <div class="welcome" id="welcome">
+        <div class="welcome-mark" aria-hidden="true">
+          <span class="wm-red"></span><span class="wm-blue"></span><span class="wm-yellow"></span>
+        </div>
+        <h2>选一张图片开始</h2>
+        <p>左边选图片或点「用示例图」，然后调尺寸和色卡，图纸会实时重算。</p>
+      </div>
+      <img id="preview" alt="拼豆图纸预览" hidden>
+      <div class="busy" id="busy" hidden><span class="spinner"></span>正在转换…</div>
+    </div>
+
+    <div class="stats" id="stats" hidden>
+      <div class="stat"><b id="statTotal">0</b><span>颗豆子</span></div>
+      <div class="stat"><b id="statSize">0×0</b><span>格子</span></div>
+      <div class="stat"><b id="statColors">0</b><span>种颜色</span></div>
+      <div class="stat"><b id="statSheets">0</b><span>块 29×29 板</span></div>
+      <div class="stat"><b id="statTime">0s</b><span>转换耗时</span></div>
+    </div>
+
+    <div class="counts-wrap" id="countsWrap" hidden>
+      <h3 class="counts-title">豆子清单 <span id="countsNote" class="muted"></span></h3>
+      <div class="counts" id="counts"></div>
+    </div>
+
+    <p class="note" id="note" hidden></p>
+  </main>
+
+</div>
+
+<div class="toast-host" id="toastHost"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>

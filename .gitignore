@@ -13,6 +13,10 @@ settings.json.bak
 _预览/
 *.log
 
+# ---------- 网页版上传的图片 ----------
+# webui.py 把上传的原图放在这里，属于用户数据，不进仓库。
+uploads/
+
 # ---------- Python 产物 ----------
 __pycache__/
 *.py[cod]
